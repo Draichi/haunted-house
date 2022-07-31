@@ -2,40 +2,37 @@ import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import GUI from "lil-gui";
-import gsap from "gsap";
 
-const gui = new GUI({width: 400});
-
+const gui = new GUI({ width: 400 });
 
 const canvas =
-(document.querySelector("canvas#webgl") as HTMLElement) ||
-({} as HTMLElement);
-
-const textureLoader = new THREE.TextureLoader()
-const doorAlpha = textureLoader.load('/static/textures/door/alpha.jpg')
-const doorAmbientOcclusion = textureLoader.load('/static/textures/door/ambientOcclusion.jpg')
-const doorColor = textureLoader.load('/static/textures/door/color.jpg')
-const doorHeight = textureLoader.load('/static/textures/door/height.jpg')
-const doorMetalness = textureLoader.load('/static/textures/door/metalness.jpg')
-const doorNormal = textureLoader.load('/static/textures/door/normal.jpg')
-const doorRoughness = textureLoader.load('/static/textures/door/roughness.jpg')
-const matcapTexture = textureLoader.load('/static/textures/matcaps/8.png')
-const gradientTexture = textureLoader.load('/static/textures/gradients/3.jpg')
+  (document.querySelector("canvas#webgl") as HTMLElement) ||
+  ({} as HTMLElement);
 
 const scene = new THREE.Scene();
-const material = new THREE.MeshMatcapMaterial({
-  matcap: matcapTexture
-})
 
-const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 16), material)
-sphere.position.x = -1.5
+const textureLoader = new THREE.TextureLoader();
 
-const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material)
+const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(20, 20),
+  new THREE.MeshStandardMaterial({ color: 0xa9c388 })
+);
+floor.rotation.x = - Math.PI * 0.5
+floor.position.y = 0
+scene.add(floor)
 
-const torus = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.2, 16, 32), material)
-torus.position.x = 1.5
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
+scene.add(ambientLight)
 
-scene.add(sphere, plane, torus)
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
+directionalLight.position.set(4, 5, -2)
+gui.add(directionalLight, 'intensity').min(0).max(1).step(0.001)
+gui.add(directionalLight.position, 'x').min(-5).max(5).step(0.001)
+gui.add(directionalLight.position, 'y').min(-5).max(5).step(0.001)
+gui.add(directionalLight.position, 'z').min(-5).max(5).step(0.001)
+scene.add(directionalLight)
+
 
 const sizes = {
   width: window.innerWidth,
@@ -69,10 +66,8 @@ window.addEventListener("dblclick", () => {
   }
 });
 
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.heigth);
-camera.position.x = 2;
-camera.position.y = 2;
-camera.position.z = 2;
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.heigth, 1, 100);
+camera.position.set(4, 2, 5)
 scene.add(camera);
 
 const controls = new OrbitControls(camera, canvas);
@@ -86,14 +81,6 @@ const clock = new THREE.Clock();
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
-  
-  sphere.rotation.y = 0.1 * elapsedTime
-  plane.rotation.y = 0.1 * elapsedTime
-  torus.rotation.y = 0.1 * elapsedTime
-
-  sphere.rotation.x = 0.15 * elapsedTime
-  plane.rotation.x = 0.15 * elapsedTime
-  torus.rotation.x = 0.15 * elapsedTime
 
   controls.update();
   renderer.render(scene, camera);
