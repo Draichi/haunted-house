@@ -4,6 +4,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import GUI from "lil-gui";
 
 const gui = new GUI({ width: 400 });
+const Z_FIGHTING_SOLVER = 0.01
 
 const canvas =
   (document.querySelector("canvas#webgl") as HTMLElement) ||
@@ -20,6 +21,41 @@ const floor = new THREE.Mesh(
 floor.rotation.x = - Math.PI * 0.5
 floor.position.y = 0
 scene.add(floor)
+
+const house = new THREE.Group()
+const houseHeight = 2.5
+const houseWidth = 4
+const houseDepth = 4
+const walls = new THREE.Mesh(
+  new THREE.BoxGeometry(houseWidth, houseHeight, houseDepth),
+  new THREE.MeshStandardMaterial({ color: 0xac8e82 })
+)
+const roofHeight = 1
+const roof = new THREE.Mesh(
+  new THREE.ConeGeometry(3.5, roofHeight, 4),
+  new THREE.MeshStandardMaterial({ color: 0xb35f45 })
+)
+const doorHeight = 2
+const door = new THREE.Mesh(
+  new THREE.PlaneGeometry(doorHeight, doorHeight),
+  new THREE.MeshStandardMaterial({ color: 0xaa7b7b })
+)
+const bushRadius = 1
+const bushGeometry = new THREE.SphereGeometry(bushRadius, 16, 16)
+const bushMaterial = new THREE.MeshStandardMaterial({ color: 0x89c854 })
+const bush1 = new THREE.Mesh(bushGeometry, bushMaterial)
+const bush2 = new THREE.Mesh(bushGeometry, bushMaterial)
+walls.position.y = houseHeight / 2
+roof.rotation.y = Math.PI * 0.25
+roof.position.y = houseHeight + (roofHeight / 2)
+door.position.set(0, doorHeight / 2, (houseDepth / 2) + Z_FIGHTING_SOLVER)
+bush1.scale.set(bushRadius/2, bushRadius/2, bushRadius/2)
+bush2.scale.set(bushRadius/4, bushRadius/4, bushRadius/4)
+bush1.position.set(houseWidth/4, bushRadius / 5, (houseDepth / 2) + (bushRadius / 4))
+bush2.position.set(houseWidth/2.5, bushRadius/ 6, (houseDepth /2) + (bushRadius /6))
+house.add(walls, roof, door, bush1, bush2)
+scene.add(house)
+
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
