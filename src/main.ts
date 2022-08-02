@@ -14,8 +14,9 @@ const scene = new THREE.Scene();
 
 const textureLoader = new THREE.TextureLoader();
 
+const floorWidth = 20
 const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(20, 20),
+  new THREE.PlaneGeometry(floorWidth, floorWidth),
   new THREE.MeshStandardMaterial({ color: 0xa9c388 })
 );
 floor.rotation.x = - Math.PI * 0.5
@@ -56,6 +57,23 @@ bush2.position.set(houseWidth/2.5, bushRadius/ 6, (houseDepth /2) + (bushRadius 
 house.add(walls, roof, door, bush1, bush2)
 scene.add(house)
 
+const graves = new THREE.Group()
+const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2)
+const graveMaterial = new THREE.MeshStandardMaterial({ color: 0xb2b6b1 })
+const minRadius = houseWidth
+const maxRadius = (floorWidth / 2) - minRadius
+for(let i=0; i<40; i++) {
+  const randomAngle = Math.random() * Math.PI * 2
+  const randomRadius = minRadius + maxRadius * Math.random()
+  const randomX = Math.sin(randomAngle) * randomRadius
+  const randomZ = Math.cos(randomAngle) * randomRadius
+  const grave = new THREE.Mesh(graveGeometry, graveMaterial)
+  grave.position.set(randomX, 0.3, randomZ)
+  grave.rotateY((Math.random() - 0.5) * 0.4)
+  grave.rotateZ((Math.random() - 0.5) * 0.4)
+  graves.add(grave)
+}
+scene.add(graves)
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
@@ -103,7 +121,7 @@ window.addEventListener("dblclick", () => {
 });
 
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.heigth, 1, 100);
-camera.position.set(4, 2, 5)
+camera.position.set(3, 5, 10)
 scene.add(camera);
 
 const controls = new OrbitControls(camera, canvas);
