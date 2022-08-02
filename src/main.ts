@@ -11,8 +11,16 @@ const canvas =
   ({} as HTMLElement);
 
 const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x262837, 1, 15)
 
 const textureLoader = new THREE.TextureLoader();
+const doorAlphaTexture = textureLoader.load('/static/textures/door/alpha.jpg')
+const doorAmbientOcclusion = textureLoader.load('/static/textures/door/ambientOcclusion.jpg')
+const doorColorTexture = textureLoader.load('/static/textures/door/color.jpg')
+const doorHeightTexture = textureLoader.load('/static/textures/door/height.jpg')
+const doorMetalness = textureLoader.load('/static/textures/door/metalness.jpg')
+const doorNormal = textureLoader.load('/static/textures/door/normal.jpg')
+const doorRoughness = textureLoader.load('/static/textures/door/roughness.jpg')
 
 const floorWidth = 20
 const floor = new THREE.Mesh(
@@ -38,8 +46,18 @@ const roof = new THREE.Mesh(
 )
 const doorHeight = 2
 const door = new THREE.Mesh(
-  new THREE.PlaneGeometry(doorHeight, doorHeight),
-  new THREE.MeshStandardMaterial({ color: 0xaa7b7b })
+  new THREE.PlaneGeometry(doorHeight + 0.2, doorHeight + 0.2, 100, 100),
+  new THREE.MeshStandardMaterial({
+    map: doorColorTexture,
+    transparent: true,
+    alphaMap: doorAlphaTexture,
+    aoMap: doorAmbientOcclusion,
+    displacementMap: doorHeightTexture,
+    displacementScale: 0.1,
+    normalMap: doorNormal,
+    metalnessMap: doorMetalness,
+    roughnessMap: doorRoughness
+  })
 )
 const bushRadius = 1
 const bushGeometry = new THREE.SphereGeometry(bushRadius, 16, 16)
@@ -51,6 +69,7 @@ walls.position.y = houseHeight / 2
 roof.rotation.y = Math.PI * 0.25
 roof.position.y = houseHeight + (roofHeight / 2)
 door.position.set(0, doorHeight / 2, (houseDepth / 2) + Z_FIGHTING_SOLVER)
+door.geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(door.geometry.attributes.uv.array, 2))
 bush1.scale.set(bushRadius/2, bushRadius/2, bushRadius/2)
 bush2.scale.set(bushRadius/4, bushRadius/4, bushRadius/4)
 bush1.position.set(houseWidth/4, bushRadius / 5, (houseDepth / 2) + (bushRadius / 4))
@@ -91,17 +110,17 @@ scene.add(moonLight)
 
 const sizes = {
   width: window.innerWidth,
-  heigth: window.innerHeight,
+  height: window.innerHeight,
 };
 
 window.addEventListener("resize", () => {
   sizes.width = window.innerWidth;
-  sizes.heigth = window.innerHeight;
+  sizes.height = window.innerHeight;
 
-  camera.aspect = sizes.width / sizes.heigth;
+  camera.aspect = sizes.width / sizes.height;
   camera.updateProjectionMatrix();
 
-  renderer.setSize(sizes.width, sizes.heigth);
+  renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
@@ -121,7 +140,7 @@ window.addEventListener("dblclick", () => {
   }
 });
 
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.heigth, 1, 100);
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 1, 100);
 camera.position.set(3, 5, 10)
 scene.add(camera);
 
@@ -129,8 +148,9 @@ const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 
 const renderer = new THREE.WebGLRenderer({ canvas });
-renderer.setSize(sizes.width, sizes.heigth);
+renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x262837)
 
 const clock = new THREE.Clock();
 
