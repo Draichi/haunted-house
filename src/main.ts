@@ -22,11 +22,39 @@ const doorMetalness = textureLoader.load('/static/textures/door/metalness.jpg')
 const doorNormal = textureLoader.load('/static/textures/door/normal.jpg')
 const doorRoughness = textureLoader.load('/static/textures/door/roughness.jpg')
 
+const bricksColorTexture = textureLoader.load('/static/textures/bricks/color.jpg')
+const bricksAmbientOcclusion = textureLoader.load('/static/textures/bricks/ambientOcclusion.jpg')
+const bricksNormalTexture = textureLoader.load('/static/textures/bricks/normal.jpg')
+const bricksRoughnessTexture = textureLoader.load('/static/textures/bricks/roughness.jpg')
+
+const grassColorTexture = textureLoader.load('/static/textures/grass/color.jpg')
+const grassAmbientOcclusion = textureLoader.load('/static/textures/grass/ambientOcclusion.jpg')
+const grassNormalTexture = textureLoader.load('/static/textures/grass/normal.jpg')
+const grassRoughnessTexture = textureLoader.load('/static/textures/grass/roughness.jpg')
+grassColorTexture.repeat.set(8, 8)
+grassAmbientOcclusion.repeat.set(8, 8)
+grassNormalTexture.repeat.set(8, 8)
+grassRoughnessTexture.repeat.set(8, 8)
+grassColorTexture.wrapS = THREE.RepeatWrapping
+grassAmbientOcclusion.wrapS = THREE.RepeatWrapping
+grassNormalTexture.wrapS = THREE.RepeatWrapping
+grassRoughnessTexture.wrapS = THREE.RepeatWrapping
+grassColorTexture.wrapT = THREE.RepeatWrapping
+grassAmbientOcclusion.wrapT = THREE.RepeatWrapping
+grassNormalTexture.wrapT = THREE.RepeatWrapping
+grassRoughnessTexture.wrapT = THREE.RepeatWrapping
+
 const floorWidth = 20
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(floorWidth, floorWidth),
-  new THREE.MeshStandardMaterial({ color: 0xa9c388 })
+  new THREE.MeshStandardMaterial({
+    map: grassColorTexture,
+    aoMap: grassAmbientOcclusion,
+    normalMap: grassNormalTexture,
+    roughnessMap: grassRoughnessTexture
+  })
 );
+floor.geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(floor.geometry.attributes.uv.array, 2))
 floor.rotation.x = - Math.PI * 0.5
 floor.position.y = 0
 scene.add(floor)
@@ -37,7 +65,12 @@ const houseWidth = 4
 const houseDepth = 4
 const walls = new THREE.Mesh(
   new THREE.BoxGeometry(houseWidth, houseHeight, houseDepth),
-  new THREE.MeshStandardMaterial({ color: 0xac8e82 })
+  new THREE.MeshStandardMaterial({
+    map: bricksColorTexture,
+    aoMap: bricksAmbientOcclusion,
+    normalMap: bricksNormalTexture,
+    roughnessMap: bricksRoughnessTexture
+  })
 )
 const roofHeight = 1
 const roof = new THREE.Mesh(
@@ -66,6 +99,7 @@ const bush1 = new THREE.Mesh(bushGeometry, bushMaterial)
 const bush2 = new THREE.Mesh(bushGeometry, bushMaterial)
 const doorLight = new THREE.PointLight(0xff7d46, 1, 7)
 walls.position.y = houseHeight / 2
+walls.geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(walls.geometry.attributes.uv.array, 2))
 roof.rotation.y = Math.PI * 0.25
 roof.position.y = houseHeight + (roofHeight / 2)
 door.position.set(0, doorHeight / 2, (houseDepth / 2) + Z_FIGHTING_SOLVER)
