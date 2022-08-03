@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import GUI from "lil-gui";
 
-// const gui = new GUI({ width: 400 });
+const gui = new GUI({ width: 400 });
 const Z_FIGHTING_SOLVER = 0.01
 
 const canvas =
@@ -132,15 +132,15 @@ for(let i=0; i<40; i++) {
 scene.add(graves)
 
 const ambientLight = new THREE.AmbientLight(0xb9d5ff, 0.12)
-// gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
+gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
 scene.add(ambientLight)
 
 const moonLight = new THREE.DirectionalLight(0xb9d5ff, 0.12)
 moonLight.position.set(4, 5, -2)
-// gui.add(moonLight, 'intensity').min(0).max(1).step(0.001)
-// gui.add(moonLight.position, 'x').min(-5).max(5).step(0.001)
-// gui.add(moonLight.position, 'y').min(-5).max(5).step(0.001)
-// gui.add(moonLight.position, 'z').min(-5).max(5).step(0.001)
+gui.add(moonLight, 'intensity').min(0).max(1).step(0.001)
+gui.add(moonLight.position, 'x').min(-5).max(5).step(0.001)
+gui.add(moonLight.position, 'y').min(-5).max(5).step(0.001)
+gui.add(moonLight.position, 'z').min(-5).max(5).step(0.001)
 scene.add(moonLight)
 
 const ghost1 = new THREE.PointLight(0xff00ff, 2, 3)
