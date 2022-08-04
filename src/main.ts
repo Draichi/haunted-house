@@ -1,6 +1,25 @@
 import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
+import doorColorTextureImage from '../static/textures/door/color.jpg'
+import doorAlphaTextureImage from '../static/textures/door/alpha.jpg'
+import doorAmbientOcclusionImage from '../static/textures/door/ambientOcclusion.jpg'
+import doorHeightTextureImage from '../static/textures/door/height.jpg'
+import doorMetalnessTextureImage from '../static/textures/door/metalness.jpg'
+import doorNormalTextureImage from '../static/textures/door/normal.jpg'
+import doorRoughnessTextureImage from '../static/textures/door/roughness.jpg'
+
+import bricksAmbientOcclusionImage from '../static/textures/bricks/ambientOcclusion.jpg'
+import bricksColorImage from '../static/textures/bricks/color.jpg'
+import bricksNormalImage from '../static/textures/bricks/normal.jpg'
+import bricksRoughnessImage from '../static/textures/bricks/roughness.jpg'
+
+import grassAmbientOcclusionImage from '../static/textures/grass/ambientOcclusion.jpg'
+import grassColorImage from '../static/textures/grass/color.jpg'
+import grassNormalImage from '../static/textures/grass/normal.jpg'
+import grassRoughnessImage from '../static/textures/grass/roughness.jpg'
+
 import GUI from "lil-gui";
 
 const gui = new GUI({ width: 400 });
@@ -14,23 +33,23 @@ const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x262837, 1, 15)
 
 const textureLoader = new THREE.TextureLoader();
-const doorAlphaTexture = textureLoader.load('/static/textures/door/alpha.jpg')
-const doorAmbientOcclusion = textureLoader.load('/static/textures/door/ambientOcclusion.jpg')
-const doorColorTexture = textureLoader.load('/static/textures/door/color.jpg')
-const doorHeightTexture = textureLoader.load('/static/textures/door/height.jpg')
-const doorMetalness = textureLoader.load('/static/textures/door/metalness.jpg')
-const doorNormal = textureLoader.load('/static/textures/door/normal.jpg')
-const doorRoughness = textureLoader.load('/static/textures/door/roughness.jpg')
+const doorAlphaTexture = textureLoader.load(doorAlphaTextureImage)
+const doorAmbientOcclusion = textureLoader.load(doorAmbientOcclusionImage)
+const doorColorTexture = textureLoader.load(doorColorTextureImage)
+const doorHeightTexture = textureLoader.load(doorHeightTextureImage)
+const doorMetalness = textureLoader.load(doorMetalnessTextureImage)
+const doorNormal = textureLoader.load(doorNormalTextureImage)
+const doorRoughness = textureLoader.load(doorRoughnessTextureImage)
 
-const bricksColorTexture = textureLoader.load('/static/textures/bricks/color.jpg')
-const bricksAmbientOcclusion = textureLoader.load('/static/textures/bricks/ambientOcclusion.jpg')
-const bricksNormalTexture = textureLoader.load('/static/textures/bricks/normal.jpg')
-const bricksRoughnessTexture = textureLoader.load('/static/textures/bricks/roughness.jpg')
+const bricksColorTexture = textureLoader.load(bricksColorImage)
+const bricksAmbientOcclusion = textureLoader.load(bricksAmbientOcclusionImage)
+const bricksNormalTexture = textureLoader.load(bricksNormalImage)
+const bricksRoughnessTexture = textureLoader.load(bricksRoughnessImage)
 
-const grassColorTexture = textureLoader.load('/static/textures/grass/color.jpg')
-const grassAmbientOcclusion = textureLoader.load('/static/textures/grass/ambientOcclusion.jpg')
-const grassNormalTexture = textureLoader.load('/static/textures/grass/normal.jpg')
-const grassRoughnessTexture = textureLoader.load('/static/textures/grass/roughness.jpg')
+const grassColorTexture = textureLoader.load(grassColorImage)
+const grassAmbientOcclusion = textureLoader.load(grassAmbientOcclusionImage)
+const grassNormalTexture = textureLoader.load(grassNormalImage)
+const grassRoughnessTexture = textureLoader.load(grassRoughnessImage)
 grassColorTexture.repeat.set(8, 8)
 grassAmbientOcclusion.repeat.set(8, 8)
 grassNormalTexture.repeat.set(8, 8)
